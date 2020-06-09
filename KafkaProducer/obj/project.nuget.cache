@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "8HkgRHXCueNnsRUcvzr3PzbhKq17qPdrEXOvVUVVUQgGjzR+FGwoOwdN9MDBlS1ZWy3imsGIhx3rK24LPdW8Lg==",
+  "success": true,
+  "projectFilePath": "C:\\Parabjyot Singh\\Kafka\\KafkaProducer\\KafkaProducer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ParabjyotS\\.nuget\\packages\\confluent.kafka\\1.4.3\\confluent.kafka.1.4.3.nupkg.sha512",
+    "C:\\Users\\ParabjyotS\\.nuget\\packages\\librdkafka.redist\\1.4.2\\librdkafka.redist.1.4.2.nupkg.sha512",
+    "C:\\Users\\ParabjyotS\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\ParabjyotS\\.nuget\\packages\\system.memory\\4.5.0\\system.memory.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
