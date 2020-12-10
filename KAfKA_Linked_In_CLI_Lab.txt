@@ -1,0 +1,118 @@
+ 
+zookeeper-server-start.bat config\zookeeper.properties
+kafka-server-start.bat config\server.properties
+kafka CLI
+
+In kafka you cant have replication factor more than the number of brokers 
+
+kafka-topics --zookeeper 127.0.0.1:2181 --topic first_topic --create  
+
+kafka-topics --zookeeper 127.0.0.1:2181 --topic first_topic --create --partitions 3 --replication-factor 1
+
+kafka-topics --zookeeper 127.0.0.1:2181 --list
+
+kafka-topics --zookeeper 127.0.0.1:2181 --topic first_topic --describe
+
+kafka-topics --zookeeper 127.0.0.1:2181 --topic second_topic --create --partitions 6 --replication-factor 1
+
+kafka-topics --zookeeper 127.0.0.1:2181 --topic second_topic --delete
+
+kafka-topics --zookeeper 127.0.0.1:2181 --list
+=========================================================
+Consumer Producer 
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic
+wrtie something after charat symbol..Ctrl+c
+
+
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic --producer-property acks=all
+write some more messages 
+
+(Leader not available exception ..when u put a message to non-existing topic)
+(We can change config/server.properties key num.partitions=1 ..So if topic doesnt exisit it will create a topic with specifed partitions)
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic new_topic
+kafka-topics --zookeeper 127.0.0.1:2181 --list
+kafka-topics --zookeeper 127.0.0.1:2181 --topic new_topic --describe
+
+After changing config/server.properties key num.partitions=1 to num.partitions=3 and restarting kafka if you produce to topic which doesnt not exisit ..) 
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic new_topic_2
+kafka-topics --zookeeper 127.0.0.1:2181 --list
+kafka-topics --zookeeper 127.0.0.1:2181 --topic new_topic_2 --describe
+===
+Consuming Data (it will consume only new data as its streaming)
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic 
+Produce something via producer
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic
+
+---What if we want to read alll messages
+
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning
+
+---Consumer in groups  --
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic
+
+Open third console and type 
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application
+" Messages in the same consumer grp are split in all available consumers ,Creating three consumers as there are thrree partitions will ensure each
+message goes to each consumer "
+
+Understanding Offset (Already read messages )
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-second-application --from-beginning
+"after above command you will see all messages from beginning"
+stop and again do 
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-second-application --from-beginning
+"this time nothing will come as all messages are read and ossfet is set ..only new messages will be read"
+
+Stop consumer and keep producing 
+
+=============more on consurmer grps===
+kafka-consumer-groups ---"This tool helps to list all consumer groups, describe a consumer group, delete consumer group info, or reset consumer group offsets."
+kafka-consumer-groups --bootstrap-server localhost:9092 --list
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group my-second-application
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group my-first-application (see lags)
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application (this will give messages equal to total of lags)
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group my-first-application( no lags)
+===Reset Offsetting---------------Replay data --
+Stop all your consumers 
+kafka-consumer-groups --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --to-earliest (dry run)
+kafka-consumer-groups --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --to-earliest --execute --topic first_topic
+"This will make offset 0 on all partitions .afer this if u do :"
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application 
+"It will show all messages againa and new offset will be set to all three partition "
+kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group my-first-application
+==shift by ==
+
+kafka-consumer-groups --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --shift-by 2 --execute --topic first_topic
+kafka-consumer-groups --bootstrap-server localhost:9092 --group my-first-application --reset-offsets --shift-by -2 --execute --topic first_topic
+===kafka UI====
+www.kafkatool.com
+cluster name : local cluster 
+version : 1.0
+Zookeeper host : localhost
+Zookeeper port : 2181
+chroot path : /
+Ping to make sure its working 
+Type : plaintext
+Bootstrap Sever: localhost:9092
+Test
+You will find Local Cluster on left side in green color 
+
+
+
+====Writing Java Code Producer===========
+https://github.com/simplesteph/kafka-beginners-course/blob/master/
+Create Maven Project 
+com.citi.kafka
+kafka-beginers-course(artifactid)
+
+Delete logs 
+Start zookeper
+start kafka
+start console --kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-third-application
+Run Java Program (ProducerDemo.java)
+	
+
+
+
+DC:
+cd 

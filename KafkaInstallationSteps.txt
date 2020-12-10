@@ -1,0 +1,51 @@
+Kafka Installation and Running
+
+1. Create data folder, inside data create kakfa and zookeeper folder
+
+2. In config folder, go to zookeeper.properties , provide path of zookeeper inside data folder
+
+3. Set environment variable, in user variable "Path", C:\Kafka\bin\windows
+
+4. Run command "zookeeper-server-start.bat config\zookeeper.properties" to start zookeeper
+
+5. In config folder, edit logs directory in server.properties with path of data/kafka
+
+6. Run command "kafka-server-start.bat config\server.properties" to start kafka
+
+7. Create topic: 
+	kafka-topics --zookeeper 127.0.0.1:2181 --topic first_topic --create
+
+8. Create topic with partitions: 
+	kafka-topics --zookeeper 127.0.0.1:2181 --topic first_topic --create --partitions 3
+
+9. Create topic with partitions and replication factor: 
+	kafka-topics --zookeeper 127.0.0.1:2181 --topic first_topic --create --partitions 3 --replication-factor 1
+
+10. List of available topics: 
+	kafka-topics --zookeeper 127.0.0.1:2181 --list
+
+11. Describe topic: 
+	kafka-topics --zookeeper 127.0.0.1:2181 first_topic --describe
+
+12. Delete topic:
+	kafka-topics --zookeeper 127.0.0.1:2181 first_topic --delete
+
+13. Create producer and write to topics:
+	kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic
+
+14. Create producer and write to topics , get ack from leader + replicas:
+	kafka-console-producer --broker-list 127.0.0.1:9092 --topic first_topic --producer-property acks=all
+
+-----------------Consumer--------------------------
+
+15. Create consumer and read from topic (by default it reads only live data):
+	kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic
+
+16. Create consumer and read from topic (read data from beginning):
+	kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning
+
+------------------Consumer Groups-------------------
+
+17. Create consumer group:
+	kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic first_topic --group my-first-application
+
